@@ -20,4 +20,7 @@ class Product{
     virtual void transferTo(Warehouse& other) = 0;
     void changeQuantity(int delta);
     void setPrice(const Price& newPrice);
+    int getId() const;
+    const std::string& getCategory() const;
+    const Price& getPrice() const;
 };

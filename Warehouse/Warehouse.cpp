@@ -1,6 +1,6 @@
 #include"Warehouse.h"
 #include<stdexcept>
-
+#include<utility>
 Warehouse::Warehouse(size_t maxSize):maxSize_(maxSize),currentSize_(0){
     if(maxSize == 0){
         throw std::invalid_argument("Size must be positive");
@@ -24,4 +24,77 @@ Warehouse& Warehouse::operator=(const Warehouse& other){
         products_.push_back(std::unique_ptr<Product>(p->clone()));
     }
     return *this;
+}
+
+Warehouse::Warehouse(Warehouse&& other) noexcept:products_(std::move(other.products_)),maxSize_(other.maxSize_),currentSize_(other.currentSize_){
+    other.currentSize_ = 0;
+    
+}
+
+Warehouse& Warehouse::operator=(Warehouse&& other) noexcept{
+    if(this == &other){
+        return *this;
+    }
+    products_.clear();
+    products_ = std::move(other.products_);
+    maxSize_ = other.maxSize_;
+    currentSize_ = other.currentSize_;
+    other.currentSize_ = 0;
+    return *this;
+}
+
+void Warehouse::addProduct(std::unique_ptr<Product> product){
+    if(products_.size() >= maxSize_){
+        throw std::invalid_argument("Warehouse is full");
+    }
+    products_.push_back(std::move(product));
+    currentSize_ += 1;
+}
+
+void Warehouse::removeById(int id){
+    for(size_t i = 0; i < products_.size(); i += 1){
+        if(products_[i]->getId() == id){
+            products_.erase(products_.begin()+i);
+            currentSize_ -= 1;
+            return;
+        }
+    }
+    throw std::invalid_argument("This Id isn't exist");
+}
+
+void Warehouse::removeByIndex(size_t index){
+    if(index >= products_.size()){
+        throw std::invalid_argument("Index out of range");
+    }
+    products_.erase(products_.begin() + index);
+    currentSize_ -= 1;
+}
+
+Product* Warehouse::findById(int id){
+    for(size_t i = 0; i < products_.size(); i += 1){
+        if(products_[i]->getId() == id){
+            return products_[i].get();
+        }
+    }
+    throw std::invalid_argument("This Id isn't exist");
+}
+
+std::vector<Product*> Warehouse::findByCategory(const std::string& category){
+    std::vector<Product*> output_vector;
+    for(const auto& p : products_){
+        if(p->getCategory() == category){
+            output_vector.push_back(p.get());
+        }
+    }
+    return output_vector;
+}
+
+std::vector<Product*> Warehouse::findByPrice(const Price& price){
+    std::vector<Product*> output_vector;
+    for(const auto& p : products_){
+        if(p->getPrice().getValue() == price.getValue()){
+            output_vector.push_back(p.get());
+        }
+    }
+    return output_vector;
 }

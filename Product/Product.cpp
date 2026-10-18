@@ -9,3 +9,15 @@ void Product::changeQuantity(int delta){
 void Product::setPrice(const Price& newPrice){
     price_ = newPrice;
 }
+
+int Product::getId() const{
+    return id;
+}
+
+const std::string& Product::getCategory() const{
+    return category;
+}
+
+const Price& Product::getPrice() const{
+    return price_;
+}

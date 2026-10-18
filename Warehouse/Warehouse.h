@@ -19,18 +19,18 @@ class Warehouse{
 
     public:
     Warehouse(size_t maxSize);
-    ~Warehouse();
+    ~Warehouse() = default;
     Warehouse(const Warehouse& other);
     Warehouse& operator=(const Warehouse& other);
-    Warehouse(Warehouse&& other);
-    Warehouse& operator=(Warehouse&& other);
+    Warehouse(Warehouse&& other) noexcept;
+    Warehouse& operator=(Warehouse&& other) noexcept;
 
-    void addProduct();
-    void removeById();
-    void removeByIndex();
-    void findById();
-    void findByCategory();
-    void findByPrice();
+    void addProduct(std::unique_ptr<Product> product);
+    void removeById(int id);
+    void removeByIndex(size_t index);
+    Product* findById(int id);
+    std::vector<Product*> findByCategory(const std::string& category);
+    std::vector<Product*> findByPrice(const Price& price);
     void begin();
     void end();
 };
