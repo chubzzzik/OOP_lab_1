@@ -2,7 +2,7 @@
 
 class Price{
     private:
-    int value;
+    int value_;
     public:
     explicit Price(int val);
     int getValue() const;
@@ -11,16 +11,17 @@ class Price{
 
 class Quantity{
     private:
-    int value;
+    int value_;
     public:
     explicit Quantity(int val);
     int getValue() const;
     void setValue(int newVal);
+    void change(int delta);
 };
 
 class Weight{
     private:
-    double value;
+    double value_;
     public:
     explicit Weight(double val);
     double getValue() const;

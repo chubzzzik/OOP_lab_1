@@ -1,16 +1,23 @@
 #pragma once
 
+#include"Attributes.h"
 #include<string>
+
+class Warehouse;
 
 class Product{
     private:
     int id;
+    static int nextId_;
     std::string name;
-    int price;
-    int quantity;
-    double weight;
+    Price price_;
+    Quantity quantity_;
+    Weight weight_;
     std::string category;
+    
     public:
     virtual Product* clone() = 0;
-
+    virtual void transferTo(Warehouse& other) = 0;
+    void changeQuantity(int delta);
+    void setPrice(const Price& newPrice);
 };

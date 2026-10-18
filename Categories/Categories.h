@@ -2,6 +2,7 @@
 #include"Product.h"
 
 class Electronics:public Product{
+    
 };
 
 class Clothing:public Product{
