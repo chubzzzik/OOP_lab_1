@@ -14,10 +14,11 @@ class WarehouseIterator{
 class Warehouse{
     private:
     std::vector<std::unique_ptr<Product>> products_;
-    int maxSize_;
+    size_t maxSize_;
     int currentSize_;
 
     public:
+    Warehouse(size_t maxSize);
     ~Warehouse();
     Warehouse(const Warehouse& other);
     Warehouse& operator=(const Warehouse& other);
