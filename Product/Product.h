@@ -16,6 +16,8 @@ class Product{
     std::string category;
     
     public:
+    Product(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight, const std::string& category);
+    virtual ~Product() = default;
     virtual Product* clone() = 0;
     virtual void transferTo(Warehouse& other) = 0;
     void changeQuantity(int delta);

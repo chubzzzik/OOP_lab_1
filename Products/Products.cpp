@@ -1,7 +1,11 @@
 #include"Products.h"
 #include"Warehouse.h"
 
-// ===ELECTRONICS===
+// =====ELECTRONICS=====
+
+// ===SMARTPHONE===
+Smartphone::Smartphone(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight):Electronics(name,price,quantity,weight){}
+
 Product* Smartphone::clone(){
     return new Smartphone(*this);
 }
@@ -9,6 +13,8 @@ Product* Smartphone::clone(){
 void Smartphone::transferTo(Warehouse& other){
     other.addProduct(std::unique_ptr<Product>(clone()));
 }
+// ===LAPTOP===
+Laptop::Laptop(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight):Electronics(name,price,quantity,weight){}
 
 Product* Laptop::clone(){
     return new Laptop(*this);
@@ -18,7 +24,11 @@ void Laptop::transferTo(Warehouse& other){
     other.addProduct(std::unique_ptr<Product>(clone()));
 }
 
-// ===CLOTHING===
+// =====CLOTHING=====
+
+// ===TSHIRT===
+TShirt::TShirt(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight):Clothing(name,price,quantity,weight){}
+
 Product* TShirt::clone(){
     return new TShirt(*this);
 }
@@ -26,6 +36,9 @@ Product* TShirt::clone(){
 void TShirt::transferTo(Warehouse& other){
     other.addProduct(std::unique_ptr<Product>(clone()));
 }
+
+// ===JACKET===
+Jacket::Jacket(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight):Clothing(name,price,quantity,weight){}
 
 Product* Jacket::clone(){
     return new Jacket(*this);
@@ -35,7 +48,11 @@ void Jacket::transferTo(Warehouse& other){
     other.addProduct(std::unique_ptr<Product>(clone()));
 }
 
-// ===FOOD===
+// =====FOOD=====
+
+// ===MILK===
+Milk::Milk(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight):Food(name,price,quantity,weight){}
+
 Product* Milk::clone(){
     return new Milk(*this);
 }
@@ -43,6 +60,8 @@ Product* Milk::clone(){
 void Milk::transferTo(Warehouse& other){
     other.addProduct(std::unique_ptr<Product>(clone()));
 }
+// ===BREAD===
+Bread::Bread(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight):Food(name,price,quantity,weight){}
 
 Product* Bread::clone(){
     return new Bread(*this);

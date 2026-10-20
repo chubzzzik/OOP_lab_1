@@ -2,6 +2,11 @@
 
 int Product::nextId_ = 1;
 
+
+Product::Product(const std::string& name, const Price& price, const Quantity& quantity, const Weight& weight, const std::string& category):name(name),price_(price),quantity_(quantity),weight_(weight),category(category){
+    id = nextId_++;
+}
+
 void Product::changeQuantity(int delta){
     quantity_.change(delta);
 }
