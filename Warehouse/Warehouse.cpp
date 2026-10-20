@@ -1,6 +1,50 @@
 #include"Warehouse.h"
 #include<stdexcept>
 #include<utility>
+
+// ===WAREHOUSEITERATOR===
+WarehouseIterator::WarehouseIterator(const std::vector<std::unique_ptr<Product>>::iterator& current, const std::vector<std::unique_ptr<Product>>::iterator& end):current_(current),end_(end){}
+
+WarehouseIterator& WarehouseIterator::operator++(){
+    current_ += 1;
+    return *this;
+}
+
+Product& WarehouseIterator::operator*()const{
+    return *(*current_);
+}
+
+bool WarehouseIterator::operator!=(const WarehouseIterator& other) const{
+    return current_ != other.current_;
+}
+    
+bool WarehouseIterator::operator==(const WarehouseIterator& other) const{
+    return current_ == other.current_;
+}
+
+
+// ===CONSTWAREHOUSEITERATOR===
+ConstWarehouseIterator::ConstWarehouseIterator(const std::vector<std::unique_ptr<Product>>::const_iterator& current, const std::vector<std::unique_ptr<Product>>::const_iterator& end):current_(current),end_(end){}
+
+ConstWarehouseIterator& ConstWarehouseIterator::operator++(){
+    current_ += 1;
+    return *this;
+}
+
+const Product& ConstWarehouseIterator::operator*() const{
+    return *(*current_);
+}
+
+bool ConstWarehouseIterator::operator!=(const ConstWarehouseIterator& other) const{
+    return current_ != other.current_;
+}
+
+bool ConstWarehouseIterator::operator==(const ConstWarehouseIterator& other) const{
+    return current_ == other.current_;
+}
+
+
+// ===WAREHOUSE===
 Warehouse::Warehouse(size_t maxSize):maxSize_(maxSize),currentSize_(0){
     if(maxSize == 0){
         throw std::invalid_argument("Size must be positive");
@@ -97,4 +141,20 @@ std::vector<Product*> Warehouse::findByPrice(const Price& price){
         }
     }
     return output_vector;
+}
+
+WarehouseIterator Warehouse::begin(){
+    return WarehouseIterator(products_.begin(),products_.end());
+}
+
+WarehouseIterator Warehouse::end(){
+    return WarehouseIterator(products_.end(),products_.end());
+}
+
+ConstWarehouseIterator Warehouse::begin() const{
+    return ConstWarehouseIterator(products_.begin(), products_.end());
+}
+
+ConstWarehouseIterator Warehouse::end() const{
+    return ConstWarehouseIterator(products_.end(), products_.end());
 }
