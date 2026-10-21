@@ -25,4 +25,7 @@ class Product{
     int getId() const;
     const std::string& getCategory() const;
     const Price& getPrice() const;
+    const std::string& getName() const;
+    const Quantity& getQuantity() const;
+    const Weight& getWeight() const;
 };

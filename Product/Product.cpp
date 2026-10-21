@@ -26,3 +26,15 @@ const std::string& Product::getCategory() const{
 const Price& Product::getPrice() const{
     return price_;
 }
+
+const std::string& Product::getName() const{
+    return name;
+}
+
+const Quantity& Product::getQuantity() const{
+    return quantity_;
+}
+
+const Weight& Product::getWeight() const{
+    return weight_;
+}
