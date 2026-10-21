@@ -2,10 +2,25 @@
 #include<limits>
 #include<stdexcept>
 #include<utility>
+#include<cstdlib>
 #include"Warehouse.h"
 #include"ProductFactories.h"
 
 // ===================== ОБЩИЕ ФУНКЦИИ =====================
+
+void clearScreen(){
+#ifdef _WIN32
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
+}
+
+
+void waitForEnter(){
+    std::cout << "\nНажмите Enter, чтобы продолжить...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
 void printProduct(const Product& p){
     std::cout << "id: " << p.getId()
@@ -40,7 +55,7 @@ void printProducts(const std::string& title, const std::vector<Product*>& produc
     }
 }
 
-// добавляет товар на склад и возвращает его id (id выдаёт счётчик nextId_) короче чтобы не падала программа 
+// добавляет товар на склад и возвращает его id (id выдаёт счётчик nextId_)
 int addAndGetId(Warehouse& warehouse, std::unique_ptr<Product> product){
     int id = product->getId();
     warehouse.addProduct(std::move(product));
@@ -94,16 +109,21 @@ bool readValue(const std::string& prompt, T& value){
 
 void scenario1(){
     Warehouse warehouse(10);
-    std::cout << "\nСклад создан, вместимость: 10 товаров\n\n";
+    std::string status = "Склад создан, вместимость: 10 товаров";
 
     while(true){
+        clearScreen();
+        if(!status.empty()){
+            std::cout << status << "\n\n";
+            status.clear();
+        }
         printAddMenu();
 
         int choice;
         if(!(std::cin >> choice)){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "\nВведите число от 0 до 6\n\n";
+            status = "Введите число от 0 до 6";
             continue;
         }
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -114,7 +134,7 @@ void scenario1(){
 
         std::unique_ptr<ProductFactory> factory = chooseFactory(choice);
         if(factory == nullptr){
-            std::cout << "\nНет такого пункта\n\n";
+            status = "Нет такого пункта";
             continue;
         }
 
@@ -129,20 +149,21 @@ void scenario1(){
         if(!readValue("Цена: ", price) ||
            !readValue("Количество: ", quantity) ||
            !readValue("Вес (кг): ", weight)){
-            std::cout << "\nОшибка ввода, товар не добавлен\n\n";
+            status = "Ошибка ввода, товар не добавлен";
             continue;
         }
 
         try{
             // id фабрика не использует, настоящий id берётся из nextId_
             warehouse.addProduct(factory->createProduct(0, name, price, quantity, weight));
-            std::cout << "\nТовар добавлен\n\n";
+            status = "Товар добавлен: " + name;
         }
         catch(const std::invalid_argument& e){
-            std::cout << "\nОшибка: " << e.what() << "\n\n";
+            status = std::string("Ошибка: ") + e.what();
         }
     }
 
+    clearScreen();
     printWarehouse("Товары на складе", warehouse);
 }
 
@@ -298,8 +319,6 @@ void scenario5(){
     printWarehouse("Склад-источник до переноса", from);
     printWarehouse("Склад-получатель до переноса", to);
 
-    // transferTo кладёт копию товара на другой склад, поэтому
-    // из источника товар убираем отдельным вызовом
     from.findById(phoneId)->transferTo(to);
     from.removeById(phoneId);
 
@@ -333,7 +352,7 @@ void scenario5(){
 // ===================== ГЛАВНОЕ МЕНЮ =====================
 
 void printMainMenu(){
-    std::cout << "\n==============================\n";
+    std::cout << "==============================\n";
     std::cout << "   ДЕМОНСТРАЦИОННЫЕ СЦЕНАРИИ\n";
     std::cout << "==============================\n";
     std::cout << "   1. Склад, фабрики, итератор\n";
@@ -348,26 +367,34 @@ void printMainMenu(){
 }
 
 int main(){
+    // сообщение об ошибке ввода, печатается над главным меню
+    std::string status;
+
     while(true){
+        clearScreen();
+        if(!status.empty()){
+            std::cout << status << "\n\n";
+            status.clear();
+        }
         printMainMenu();
 
         int choice;
         if(!(std::cin >> choice)){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "\nВведите число от 0 до 5\n";
+            status = "Введите число от 0 до 5";
             continue;
         }
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch(choice){
             case 0: return 0;
-            case 1: scenario1(); break;
-            case 2: scenario2(); break;
-            case 3: scenario3(); break;
-            case 4: scenario4(); break;
-            case 5: scenario5(); break;
-            default: std::cout << "\nНет такого пункта\n";
+            case 1: clearScreen(); scenario1(); waitForEnter(); break;
+            case 2: clearScreen(); scenario2(); waitForEnter(); break;
+            case 3: clearScreen(); scenario3(); waitForEnter(); break;
+            case 4: clearScreen(); scenario4(); waitForEnter(); break;
+            case 5: clearScreen(); scenario5(); waitForEnter(); break;
+            default: status = "Нет такого пункта";
         }
     }
 }
